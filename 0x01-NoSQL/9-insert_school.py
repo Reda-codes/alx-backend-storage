@@ -5,5 +5,4 @@
 def insert_school(mongo_collection, **kwargs):
     ''' insert_school function'''
     newDict = {key: value for key, value in kwargs.items()}
-    mongo_collection.insert(newDict)
-    return mongo_collection.find()
+    mongo_collection.insert_one(newDict).inserted_id
