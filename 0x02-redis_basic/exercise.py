@@ -4,7 +4,7 @@ exercise file
 '''
 import redis
 import uuid
-from typing import Union, Callable
+from typing import Union, Callable, Optional
 
 
 class Cache:
@@ -27,7 +27,7 @@ class Cache:
             return(f"Error: {e}")
 
     def get(
-            self, key: str, fn: Callable[[str], Union[int, str]]
+            self, key: str, fn: Optional[Callable[[str], Union[int, str]]] = None
             ) -> Union[str, int, float, bytes]:
         '''
         get method that take a key string argument
