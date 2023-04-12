@@ -12,7 +12,7 @@ def replay(method: Callable) -> None:
     '''
     function to display the history of calls of a particular function.
     '''
-    cache = method.__self__
+    cache: class = method.__self__
     inputs = cache._redis.lrange("{}:inputs"
                                  .format(method.__qualname__), 0, -1)
     outputs = cache._redis.lrange("{}:outputs"
@@ -25,6 +25,7 @@ def replay(method: Callable) -> None:
 
 
 def count_calls(method: Callable) -> Callable:
+    ''' count_calls function '''
     mykey = method.__qualname__
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):
@@ -34,6 +35,7 @@ def count_calls(method: Callable) -> Callable:
 
 
 def call_history(method: Callable) -> Callable:
+    ''' call_history function '''
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):
         store = method(self, *args, **kwargs)
