@@ -5,6 +5,16 @@ exercise file
 import redis
 import uuid
 from typing import Union, Callable, Optional
+import functools
+
+
+def count_calls(method: Callable) -> Callable:
+    mykey = method.__qualname__
+    @functools.wraps(method)
+    def wrapper(self, *args, **kwargs):
+        self._redis.incr(mykey)
+        return method(self, *args, **kwargs)
+    return wrapper
 
 
 class Cache:
@@ -15,6 +25,7 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
+    @count_calls
     def store(self, data: Union[str, int, float, bytes]) -> str:
         '''
         method that takes a data argument and returns a string
@@ -27,8 +38,9 @@ class Cache:
             return(f"Error: {e}")
 
     def get(
-            self, key: str, fn: Optional[Callable[[str], Union[int, str]]] = None
-            ) -> Union[str, int, float, bytes]:
+            self, key: str, fn: Optional[Callable[[str],
+                                         Union[int, str]]] = None
+                ) -> Union[str, int, float, bytes]:
         '''
         get method that take a key string argument
         and an optional Callable argument named fn
@@ -41,7 +53,7 @@ class Cache:
 
     def get_str(self, value: str) -> str:
         ''' get_str function '''
-        return valaue.decode('utf-8')
+        return value.decode('utf-8')
 
     def get_int(self, value: str) -> int:
         ''' get_int function '''
