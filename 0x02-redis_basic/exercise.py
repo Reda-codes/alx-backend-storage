@@ -19,8 +19,8 @@ class Cache:
         method that takes a data argument and returns a string
         '''
         uid = str(uuid.uuid4())
-        try:
-            self._redis.set(uid, data)
-            return uid
-        except redis.RedisError as e:
-            return(f"Error: {e}")
+        '''try:'''
+        self._redis.set(uid, data)
+        return uid
+        '''except redis.RedisError as e:
+            return(f"Error: {e}")'''
