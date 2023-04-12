@@ -12,7 +12,7 @@ def replay(method: Callable) -> None:
     '''
     function to display the history of calls of a particular function.
     '''
-    cache: class = method.__self__
+    cache = method.__self__
     inputs = cache._redis.lrange("{}:inputs"
                                  .format(method.__qualname__), 0, -1)
     outputs = cache._redis.lrange("{}:outputs"
