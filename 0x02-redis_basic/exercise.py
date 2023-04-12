@@ -8,7 +8,7 @@ from typing import Union, Callable, Optional
 import functools
 
 
-def replay(method):
+def replay(method: Callable) -> None:
     '''
     function to display the history of calls of a particular function.
     '''
