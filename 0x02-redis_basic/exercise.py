@@ -17,6 +17,16 @@ def count_calls(method: Callable) -> Callable:
     return wrapper
 
 
+def call_history(method: Callable) -> Callable:
+    @functools.wraps(method)
+    def wrapper(self, *args, **kwargs):
+        store = method(self, *args, **kwargs)
+        self._redis.rpush("{}:inputs".format(method.__qualname__), str(args))
+        self._redis.rpush("{}:outputs".format(method.__qualname__), store)
+        return store
+    return wrapper
+
+
 class Cache:
     '''
     class Cache that handless memory cache
@@ -25,6 +35,7 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
+    @call_history
     @count_calls
     def store(self, data: Union[str, int, float, bytes]) -> str:
         '''
