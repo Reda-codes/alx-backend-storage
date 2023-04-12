@@ -8,6 +8,22 @@ from typing import Union, Callable, Optional
 import functools
 
 
+def replay(method):
+    '''
+    function to display the history of calls of a particular function.
+    '''
+    cache = method.__self__
+    inputs = cache._redis.lrange("{}:inputs"
+                                 .format(method.__qualname__), 0, -1)
+    outputs = cache._redis.lrange("{}:outputs"
+                                  .format(method.__qualname__), 0, -1)
+    result = zip(inputs, outputs)
+    print('Cache.store was called {} times:'.format(len(inputs)))
+    for el in result:
+        print("Cache.store(*{}) -> {}".format(el[0].decode("utf-8"),
+                                              el[1].decode("utf-8")))
+
+
 def count_calls(method: Callable) -> Callable:
     mykey = method.__qualname__
     @functools.wraps(method)
