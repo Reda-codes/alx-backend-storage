@@ -8,10 +8,11 @@ import uuid
 def get_page(url: str) -> str:
     ''' get_page function '''
     client = redis.Redis()
-    if client.get(url):
-        return client.get(url)
+    cached = client.get(url)
+    if cached:
+        return cached
     else:
         client.incr(f"count:{url}")
-        response = requests.get(url).content
+        response = requests.get(url).content.decode('utf-8')
         client.setex(url, 10, response)
         return response
