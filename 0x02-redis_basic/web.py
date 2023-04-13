@@ -10,6 +10,7 @@ def get_page(url: str) -> str:
     client = redis.Redis()
     cached = client.get(url)
     if cached:
+        client.incr(f"count:{url}")
         return cached
     else:
         client.incr(f"count:{url}")
