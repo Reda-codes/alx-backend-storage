@@ -55,7 +55,7 @@ class Cache:
 
     @call_history
     @count_calls
-    def store(self, data: Union[str, int, float, bytes]) -> str:
+    def store(self, data: Union[str, bytes, int, float]) -> str:
         '''
         method that takes a data argument and returns a string
         '''
